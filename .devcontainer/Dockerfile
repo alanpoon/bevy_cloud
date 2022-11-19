@@ -2,6 +2,7 @@
 #
 # [Choice] Debian OS version: bullseye, buster
 ARG VARIANT="bullseye"
+ARG WASM_BINDGEN_VERSION="0.2.83"
 # FROM buildpack-deps:${VARIANT}-curl
 FROM mcr.microsoft.com/devcontainers/rust:1-${VARIANT}
 # Use the [Option] comment to specify true/false arguments that should appear in VS Code UX
@@ -15,18 +16,31 @@ ARG USERNAME=vscode
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 # Install needed packages and setup non-root user. Use a separate RUN statement to add your own dependencies.
-COPY library-scripts/*.sh library-scripts/*.env /tmp/library-scripts/
-RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-    && /bin/bash /tmp/library-scripts/common-debian.sh "${INSTALL_ZSH}" "${USERNAME}" "${USER_UID}" "${USER_GID}" "${UPGRADE_PACKAGES}" "true" "true" \
-    #
+#COPY library-scripts/*.sh library-scripts/*.env /tmp/library-scripts/
+# RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
+#     && /bin/bash /tmp/library-scripts/common-debian.sh "${INSTALL_ZSH}" "${USERNAME}" "${USER_UID}" "${USER_GID}" "${UPGRADE_PACKAGES}" "true" "true" \
+#     #
     # ****************************************************************************
     # * TODO: Add any additional OS packages you want included in the definition *
     # * here. We want to do this before cleanup to keep the "layer" small.       *
     # ****************************************************************************
     # && apt-get -y install --no-install-recommends <your-package-list-here> \
     #
-    && apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/* /tmp/library-scripts
+    #&& apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/* /tmp/library-scripts
+# RUN apt install glibc-source -y
+RUN apt-get install libcurl4-openssl-dev \
+    && curl -s https://packagecloud.io/install/repositories/wasmcloud/core/script.deb.sh | bash && apt install wash \
+    && which wash
+RUN echo $WASM_BINDGEN_VERSION
+RUN cargo install -f wasm-bindgen-cli --vers 0.2.83
+RUN cargo install -f wasm-snip
 
 # [Optional] Uncomment this section to install additional OS packages.
 # RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
 #     && apt-get -y install --no-install-recommends <your-package-list-here>
+# RUN wget -c https://ftp.gnu.org/gnu/glibc/glibc-2.29.tar.gz \
+#     && tar -zxvf glibc-2.29.tar.gz \
+#     && cd glibc-2.29 \
+#     && ./configure --prefix=/opt/glibc \
+#     && make \
+#     && make install

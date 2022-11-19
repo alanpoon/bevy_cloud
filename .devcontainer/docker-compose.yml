@@ -8,8 +8,8 @@ services:
       dockerfile: Dockerfile
       # [Optional] You can use build args to set options. e.g. 'VARIANT' below affects the image in the Dockerfile
       args: 
-        VARIANT: buster
-
+        VARIANT: bullseye
+        WASM_BINDGEN_VERSION: "0.2.83"
     volumes:
       # This is where VS Code should expect to find your project's source code and the value of "workspaceFolder" in .devcontainer/devcontainer.json
       - ..:/workspace:cached
@@ -39,5 +39,29 @@ services:
   another-service:
     image: mongo:latest
     restart: unless-stopped
-
+  nats:
+      image: nats:2.8.4-alpine
+      ports:
+        - "4222:4222"
+        - "6222:6222"
+        - "8222:8222"
+        - "9223:9223"
+      volumes:
+        - ../templates/configs/websocket_lite.conf:/etc/nats/nats-server.conf
+      command: [ "-js" ,"-c","/etc/nats/nats-server.conf"]
+  wasmcloud:
+    image: wasmcloud/wasmcloud_host:latest
+    environment:
+      #RUST_LOG: info,hyper=info
+      WASMCLOUD_RPC_HOST: nats
+      WASMCLOUD_CTL_HOST: nats
+      WASMCLOUD_PROV_RPC_HOST: nats
+      WASMCLOUD_HOST_SEED: SNAKDMBLB7TPIL4K3YXDGLUDXYFEEB2UAUXSAJYFBUKAWXBT6VPSTSE34Y
+      WASMCLOUD_CLUSTER_SEED: SCALV3N2M5JRUOCSLTRTAIQYJSBKNZ3XMGME2XI3L3OSR2RRSYUTMHAN7E
+      WASMCLOUD_OCI_ALLOWED_INSECURE: host.docker.internal:5000
+#      OTEL_TRACES_EXPORTER: otlp
+#      OTEL_EXPORTER_OTLP_ENDPOINT: http://tempo:55681
+    ports:
+      - "4000:4000"
+      - "8080-8089:8080-8089" # Allows exposing examples on ports 8080-8089
     # As in the "app" service, use "forwardPorts" in **devcontainer.json** to forward an app port locally.
