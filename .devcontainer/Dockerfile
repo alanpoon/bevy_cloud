@@ -34,7 +34,9 @@ RUN apt-get install libcurl4-openssl-dev \
 RUN echo $WASM_BINDGEN_VERSION
 RUN cargo install -f wasm-bindgen-cli --vers 0.2.83
 RUN cargo install -f wasm-snip
-
+RUN chown -R vscode:rustlang /usr/local/cargo
+RUN rustup target add wasm32-unknown-unknown
+RUN apt-get install iputils-ping -y
 # [Optional] Uncomment this section to install additional OS packages.
 # RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
 #     && apt-get -y install --no-install-recommends <your-package-list-here>

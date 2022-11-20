@@ -13,7 +13,7 @@ services:
     volumes:
       # This is where VS Code should expect to find your project's source code and the value of "workspaceFolder" in .devcontainer/devcontainer.json
       - ..:/workspace:cached
-
+      - ../templates/contexts:/home/vscode/.wash/contexts
       # Uncomment the next line to use Docker from inside the container. See https://aka.ms/vscode-remote/samples/docker-from-docker-compose for details.
       # - /var/run/docker.sock:/var/run/docker.sock 
 
@@ -21,20 +21,41 @@ services:
     command: /bin/sh -c "while sleep 1000; do :; done"  
 
     # Runs app on the same network as the service container, allows "forwardPorts" in devcontainer.json function.
-    network_mode: service:another-service
+    #network_mode: service:another-service
     
     # Use "forwardPorts" in **devcontainer.json** to forward an app port locally. 
     # (Adding the "ports" property to this file will not forward from a Codespace.)
 
     # Uncomment the next line to use a non-root user for all processes - See https://aka.ms/vscode-remote/containers/non-root for details.
-    # user: vscode
+    user: vscode
 
     # Uncomment the next four lines if you will use a ptrace-based debugger like C++, Go, and Rust.
     # cap_add:
     #   - SYS_PTRACE
     # security_opt:
     #   - seccomp:unconfined
-    
+    networks:
+      - my-network
+    environment:
+      #RUST_LOG: info,hyper=info
+      WASMCLOUD_RPC_HOST: nats
+      WASMCLOUD_CTL_HOST: nats
+      WASMCLOUD_PROV_RPC_HOST: nats
+      WASMCLOUD_HOST_SEED: SNAKDMBLB7TPIL4K3YXDGLUDXYFEEB2UAUXSAJYFBUKAWXBT6VPSTSE34Y
+      WASMCLOUD_CLUSTER_SEED: SCALV3N2M5JRUOCSLTRTAIQYJSBKNZ3XMGME2XI3L3OSR2RRSYUTMHAN7E
+      WASMCLOUD_OCI_ALLOWED_INSECURE: registry:5000
+  registry:
+    image: registry:2.7
+    volumes:
+        - ../templates/certs:/certs
+    #environment:
+      # REGISTRY_HTTP_ADDR: 0.0.0.0:443
+      # REGISTRY_HTTP_TLS_CERTIFICATE: /certs/domain.crt
+      # REGISTRY_HTTP_TLS_KEY: /certs/domain.key
+  #   ports:
+  #     - "5000:5000"
+    networks:
+      - my-network
   # You can include other services not opened by VS Code as well
   another-service:
     image: mongo:latest
@@ -49,6 +70,8 @@ services:
       volumes:
         - ../templates/configs/websocket_lite.conf:/etc/nats/nats-server.conf
       command: [ "-js" ,"-c","/etc/nats/nats-server.conf"]
+      networks:
+        - my-network
   wasmcloud:
     image: wasmcloud/wasmcloud_host:latest
     environment:
@@ -58,10 +81,15 @@ services:
       WASMCLOUD_PROV_RPC_HOST: nats
       WASMCLOUD_HOST_SEED: SNAKDMBLB7TPIL4K3YXDGLUDXYFEEB2UAUXSAJYFBUKAWXBT6VPSTSE34Y
       WASMCLOUD_CLUSTER_SEED: SCALV3N2M5JRUOCSLTRTAIQYJSBKNZ3XMGME2XI3L3OSR2RRSYUTMHAN7E
-      WASMCLOUD_OCI_ALLOWED_INSECURE: host.docker.internal:5000
+      WASMCLOUD_OCI_ALLOWED_INSECURE: registry:5000
 #      OTEL_TRACES_EXPORTER: otlp
 #      OTEL_EXPORTER_OTLP_ENDPOINT: http://tempo:55681
     ports:
       - "4000:4000"
       - "8080-8089:8080-8089" # Allows exposing examples on ports 8080-8089
     # As in the "app" service, use "forwardPorts" in **devcontainer.json** to forward an app port locally.
+    networks:
+      - my-network
+networks:
+  my-network:
+    external: true
