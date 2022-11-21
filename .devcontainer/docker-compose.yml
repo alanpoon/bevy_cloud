@@ -46,8 +46,6 @@ services:
       WASMCLOUD_OCI_ALLOWED_INSECURE: registry:5000
   registry:
     image: registry:2.7
-    volumes:
-        - ../templates/certs:/certs
     #environment:
       # REGISTRY_HTTP_ADDR: 0.0.0.0:443
       # REGISTRY_HTTP_TLS_CERTIFICATE: /certs/domain.crt
