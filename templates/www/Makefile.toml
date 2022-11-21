@@ -19,7 +19,7 @@ dependencies = ["webpack"]
 
 [tasks.wasm-serve2]
 command = "nohup"
-args = ["basic-http-server", "public","-a","127.0.0.1:4001"]
+args = ["basic-http-server", "public","-a","0.0.0.0:4001"]
 dependencies = ["wasm-bindgen"]
 
 [config]

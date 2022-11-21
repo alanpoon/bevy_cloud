@@ -16,7 +16,11 @@ pub fn handle_server_op(msg: Vec<u8>) -> io::Result<nats::proto::ServerOp> {
 pub fn handle_client_op(client_op: nats::proto::ClientOp) -> io::Result<Vec<u8>> {
     let mut bytes: Vec<u8> = vec![];
     let mut writer = BufWriter::with_capacity(BUF_CAPACITY, &mut *bytes);
-    nats::proto::encode(&mut writer, client_op.clone())?;
+    let mut client_op2= client_op.clone();
+    if let nats::proto::ClientOp::Sub{ref mut subject,..} = client_op2{
+        *subject=format!("{}.{}",multitenary::UNIQUE,subject);
+    }
+    nats::proto::encode(&mut writer, client_op2.clone())?;
     if let Ok(_) = writer.flush() {}
     Ok(writer.buffer().to_vec())
 }

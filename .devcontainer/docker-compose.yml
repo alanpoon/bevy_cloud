@@ -44,6 +44,8 @@ services:
       WASMCLOUD_HOST_SEED: SNAKDMBLB7TPIL4K3YXDGLUDXYFEEB2UAUXSAJYFBUKAWXBT6VPSTSE34Y
       WASMCLOUD_CLUSTER_SEED: SCALV3N2M5JRUOCSLTRTAIQYJSBKNZ3XMGME2XI3L3OSR2RRSYUTMHAN7E
       WASMCLOUD_OCI_ALLOWED_INSECURE: registry:5000
+    ports:
+      - "4001:4001"
   registry:
     image: registry:2.7
     #environment:
@@ -65,6 +67,7 @@ services:
         - "6222:6222"
         - "8222:8222"
         - "9223:9223"
+        - "7083:7083"
       volumes:
         - ../templates/configs/websocket_lite.conf:/etc/nats/nats-server.conf
       command: [ "-js" ,"-c","/etc/nats/nats-server.conf"]

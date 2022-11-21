@@ -1059,6 +1059,7 @@ dependencies = [
 [[package]]
 name = "boltless-client-websocket"
 version = "0.1.0"
+source = "git+https://github.com/alanpoon/bevy_wasmcloud_lib#49d7e17ca6d491ceddd9292aeffc9c37b57cd3c3"
 dependencies = [
  "async-trait",
  "cross-websocket",
@@ -1126,6 +1127,7 @@ version = "0.1.0"
 dependencies = [
  "enum_dispatch",
  "log",
+ "multitenary",
  "nats-lite",
  "rmp-serde 1.1.1",
  "serde",
@@ -1509,6 +1511,7 @@ dependencies = [
 [[package]]
 name = "cross-websocket"
 version = "0.1.0"
+source = "git+https://github.com/alanpoon/bevy_wasmcloud_lib#49d7e17ca6d491ceddd9292aeffc9c37b57cd3c3"
 dependencies = [
  "eyre",
  "futures 0.3.25",
@@ -3085,6 +3088,10 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e5ce46fe64a9d73be07dcbe690a38ce1b293be448fd8ce1e6c1b8062c9f72c6a"
 
 [[package]]
+name = "multitenary"
+version = "0.1.0"
+
+[[package]]
 name = "naga"
 version = "0.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3185,6 +3192,7 @@ dependencies = [
 [[package]]
 name = "nats-lite"
 version = "0.1.0"
+source = "git+https://github.com/alanpoon/bevy_wasmcloud_lib#49d7e17ca6d491ceddd9292aeffc9c37b57cd3c3"
 dependencies = [
  "fastrand",
  "itoa 0.4.8",
