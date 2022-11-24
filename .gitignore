@@ -1,4 +1,4 @@
 **/target
 build
 **/pkg
-www/nohup.out
+templates/www/nohup.out

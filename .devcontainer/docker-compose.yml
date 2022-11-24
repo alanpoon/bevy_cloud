@@ -14,6 +14,8 @@ services:
       # This is where VS Code should expect to find your project's source code and the value of "workspaceFolder" in .devcontainer/devcontainer.json
       - ..:/workspace:cached
       - ../templates/contexts:/home/vscode/.wash/contexts
+      - ../../cargo2/registry:/usr/local/cargo/registry
+      - ../../cargo2/git:/usr/local/cargo/git
       # Uncomment the next line to use Docker from inside the container. See https://aka.ms/vscode-remote/samples/docker-from-docker-compose for details.
       # - /var/run/docker.sock:/var/run/docker.sock 
 
@@ -70,7 +72,7 @@ services:
         - "7083:7083"
       volumes:
         - ../templates/configs/websocket_lite.conf:/etc/nats/nats-server.conf
-      command: [ "-js" ,"-c","/etc/nats/nats-server.conf"]
+      command: [ "-js" ,"-V","-c","/etc/nats/nats-server.conf"]
       networks:
         - my-network
   wasmcloud:

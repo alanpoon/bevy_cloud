@@ -6,7 +6,7 @@ use nats_lite::nats;
 use std::io::Write;
 use std::io::{BufReader, BufWriter};
 const BUF_CAPACITY: usize = 128 * 1024;
-
+use log::info;
 use std::io;
 pub fn handle_server_op(msg: Vec<u8>) -> io::Result<nats::proto::ServerOp> {
     let mut reader = BufReader::with_capacity(BUF_CAPACITY, &*msg);
@@ -17,9 +17,17 @@ pub fn handle_client_op(client_op: nats::proto::ClientOp) -> io::Result<Vec<u8>>
     let mut bytes: Vec<u8> = vec![];
     let mut writer = BufWriter::with_capacity(BUF_CAPACITY, &mut *bytes);
     let mut client_op2= client_op.clone();
-    if let nats::proto::ClientOp::Sub{ref mut subject,..} = client_op2{
-        *subject=format!("{}.{}",multitenary::UNIQUE,subject);
+    match client_op2{
+        nats::proto::ClientOp::Sub{ref mut subject,..}=>{
+            *subject=format!("{}.{}",multitenary::UNIQUE,subject);
+            info!("sub...{:?}",subject.clone());
+        }
+        nats::proto::ClientOp::Pub{ref mut subject,..}=>{
+            *subject=format!("{}.{}",multitenary::UNIQUE,subject);
+        }
+        _=>{}
     }
+    
     nats::proto::encode(&mut writer, client_op2.clone())?;
     if let Ok(_) = writer.flush() {}
     Ok(writer.buffer().to_vec())

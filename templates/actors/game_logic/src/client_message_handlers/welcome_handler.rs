@@ -31,6 +31,7 @@ pub async fn _fn (map:Arc<Mutex<App>>,game_id:String,ball_id:BallId,ball_label:B
         },
       };
       let mut app = guard;
+      info_(format!("welcome {:?}",ball_bundle.clone()));
       spawn(&mut app.world,ball_bundle.clone());
       let server_message = ServerMessage::Welcome{ball_bundle};
       match rmp_serde::to_vec(&server_message){
@@ -38,7 +39,7 @@ pub async fn _fn (map:Arc<Mutex<App>>,game_id:String,ball_id:BallId,ball_label:B
           let p_msg = PubMessage{
             body:b,
             reply_to: None,
-            subject: String::from("welcome")
+            subject: format!("{}.{}",multitenary::UNIQUE,String::from("welcome"))
             };
           publish_(p_msg);
         }
@@ -62,7 +63,7 @@ pub async fn _fn (map:Arc<Mutex<App>>,game_id:String,ball_id:BallId,ball_label:B
           let p_msg = PubMessage{
             body:b,
             reply_to: None,
-            subject: format!("game_logic_specify.{}",ball_id.0)
+            subject: format!("{}.game_logic_specify.{}",multitenary::UNIQUE,ball_id.0)
           };
           publish_(p_msg);
         }

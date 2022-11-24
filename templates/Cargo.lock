@@ -1579,6 +1579,7 @@ dependencies = [
  "convert_case",
  "futures 0.3.25",
  "lazy_static",
+ "multitenary",
  "rmp-serde",
  "serde",
  "serde_bytes",
@@ -2130,6 +2131,10 @@ dependencies = [
  "wasi 0.11.0+wasi-snapshot-preview1",
  "windows-sys 0.42.0",
 ]
+
+[[package]]
+name = "multitenary"
+version = "0.1.0"
 
 [[package]]
 name = "naga"
