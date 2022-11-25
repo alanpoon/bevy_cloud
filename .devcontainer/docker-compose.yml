@@ -16,6 +16,8 @@ services:
       - ../templates/contexts:/home/vscode/.wash/contexts
       - ../../cargo2/registry:/usr/local/cargo/registry
       - ../../cargo2/git:/usr/local/cargo/git
+      - ../templates/configs/websocket_lite.conf:/etc/nats-server.conf
+      - ../templates/data/current:/etc/current
       # Uncomment the next line to use Docker from inside the container. See https://aka.ms/vscode-remote/samples/docker-from-docker-compose for details.
       # - /var/run/docker.sock:/var/run/docker.sock 
 
@@ -48,6 +50,7 @@ services:
       WASMCLOUD_OCI_ALLOWED_INSECURE: registry:5000
     ports:
       - "4001:4001"
+      - "4567:4567"
   registry:
     image: registry:2.7
     #environment:

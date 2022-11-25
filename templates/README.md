@@ -20,3 +20,21 @@ docker logs -n 200 2de6af269e67
 
 docker stop $(docker ps -a -q)
 docker rm $(docker ps -a -q)
+
+nats-server --signal reload=1
+
+
+nats-rest-config-proxy -c /etc/nats-server.conf
+curl -X GET http://localhost:4567/v1/auth/perms
+docker exec -it bevy_wasmcloud_codegen2_devcontainer-nats-1 nats-server --signal reload
+
+docker logs -n 100 bevy_wasmcloud_codegen2_devcontainer-nats-1
+
+bevy_wasmcloud_codegen2_devcontainer-app-1
+
+docker exec -it bevy_wasmcloud_codegen2_devcontainer-app-1 /bin/bash
+
+make init
+make build
+make start
+make serve

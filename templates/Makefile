@@ -1,6 +1,7 @@
 .PHONY: build start
+init:
+	nats-rest-config-proxy -d /etc/nats-rest-config-proxy-data
 build:
-
 	wash reg push --insecure registry:5000/v2/game-provider:0.1.0 ../test/cap/game-provider.par.gz
 	wash reg push --insecure registry:5000/v2/nats-messaging:0.11.5 ../test/cap/nats_messaging.par.gz
 	# wash reg push registry:443/v2/game-provider:0.1.0 ../test/cap/game-provider.par.gz

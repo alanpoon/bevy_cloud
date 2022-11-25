@@ -38,9 +38,15 @@ RUN cargo install -f cargo-make
 RUN rustup target add wasm32-unknown-unknown
 RUN apt-get install iputils-ping -y
 RUN cargo install -f basic-http-server
-# RUN chown -R vscode:rustlang /usr/local/cargo
 
-# [Optional] Uncomment this section to install additional OS packages.
+RUN wget https://github.com/nats-io/nats-rest-config-proxy/releases/download/v0.7.0/nats-rest-config-proxy-v0.7.0-linux-amd64.deb && dpkg -i nats-rest-config-proxy-v0.7.0-linux-amd64.deb
+#ENTRYPOINT ["nohup","nats-rest-config-proxy","&"]
+
+#CMD ["nats-rest-config-proxy"]
+# sudo nohup nats-rest-config-proxy -d /etc/nats-rest-config-proxy-data > t2.out > /dev/null 2>&1 &
+#RUN nohup nats-rest-config-proxy -d /etc/nats-rest-config-proxy-data > nats-rest.out 2>&1 < /dev/null &
+
+#  [Optional] Uncomment this section to install additional OS packages.
 # RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
 #     && apt-get -y install --no-install-recommends <your-package-list-here>
 # RUN wget -c https://ftp.gnu.org/gnu/glibc/glibc-2.29.tar.gz \
