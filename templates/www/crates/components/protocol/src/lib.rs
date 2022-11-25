@@ -20,7 +20,6 @@ pub fn handle_client_op(client_op: nats::proto::ClientOp) -> io::Result<Vec<u8>>
     match client_op2{
         nats::proto::ClientOp::Sub{ref mut subject,..}=>{
             *subject=format!("{}.{}",multitenary::UNIQUE,subject);
-            info!("sub...{:?}",subject.clone());
         }
         nats::proto::ClientOp::Pub{ref mut subject,..}=>{
             *subject=format!("{}.{}",multitenary::UNIQUE,subject);

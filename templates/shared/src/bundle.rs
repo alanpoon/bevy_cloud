@@ -45,7 +45,7 @@ impl<'de> Deserialize<'de> for BallBundle {
         Ok(BallBundle{
             ball_id:bs.ball_id,
             ball_label:bs.ball_label,
-            transform: Transform::from_xyz(bs.transform.x,bs.transform.y,3.0).with_scale(Vec3::splat(0.2)),
+            transform: Transform::from_xyz(bs.transform.x,bs.transform.y,3.0),
             global_transform:GlobalTransform::identity(),
             velocity:Velocity { linvel: [bs.velocity.x,bs.velocity.y].into(), ..Default::default() },
             rigid_body:RigidBody::Dynamic,

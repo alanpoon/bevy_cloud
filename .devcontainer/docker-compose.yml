@@ -72,7 +72,7 @@ services:
         - "7083:7083"
       volumes:
         - ../templates/configs/websocket_lite.conf:/etc/nats/nats-server.conf
-      command: [ "-js" ,"-V","-c","/etc/nats/nats-server.conf"]
+      command: [ "-js" ,"-c","/etc/nats/nats-server.conf"]
       networks:
         - my-network
   wasmcloud:
