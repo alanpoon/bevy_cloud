@@ -26,6 +26,19 @@ nats-server --signal reload=1
 
 nats-rest-config-proxy -c /etc/nats-server.conf
 curl -X GET http://localhost:4567/v1/auth/perms
+
+curl -X PUT http://localhost:4567/v1/auth/idents/sample-user2 -d '{
+  "username": "sample-user2",
+  "password": "secret",
+  "permissions": "sample-user2"
+}'
+curl http://localhost:4567/v1/auth/idents/sample-user
+curl -X PUT http://127.0.0.1:4567/v1/auth/accounts/sample-account -d '{}'
+
+curl -X PUT http://127.0.0.1:4567/v2/auth/accounts/sample-account2 -d '{}'
+curl -X POST http://localhost:4567/v1/auth/snapshot?name=snap1
+curl -X POST http://127.0.0.1:4567/v1/auth/publish?name=snap1
+
 docker exec -it bevy_wasmcloud_codegen2_devcontainer-nats-1 nats-server --signal reload
 
 docker logs -n 100 bevy_wasmcloud_codegen2_devcontainer-nats-1
